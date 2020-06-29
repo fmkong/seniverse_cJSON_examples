@@ -6,6 +6,7 @@
 #include "cJSON.h"
 #include "seniverse_weather_daily.h"
 #include "seniverse_cJson_utils.h"
+#include "seniverse_weather.h"
 
 #define LOG_TAG "seniverse_daily"
 
@@ -91,4 +92,9 @@ int parse_weather_daily(const char *buf, struct weather_daily *daily, int *count
     if (json)
         cJSON_Delete(json);
     return 0;
+}
+
+int weather_daily_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit, int start, int count)
+{
+    return snprintf(url, url_max_len, "weather/daily.json?key=%s&location=%s&language=%s&unit=%s&start=%d&days=%d", key, location, seniverse_languages[language], seniverse_units[unit], start, count);
 }

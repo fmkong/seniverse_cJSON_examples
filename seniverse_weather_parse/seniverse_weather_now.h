@@ -34,6 +34,7 @@ struct weather_now {
 };
 
 int parse_weather_now(const char *buf, struct weather_now *now);
+int weather_now_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit);
 
 #ifdef __cplusplus
 }

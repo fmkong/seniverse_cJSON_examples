@@ -55,6 +55,27 @@ enum seniverse_weather_code {
 
 #define WEATHER_UPDATE_TIME_MAX_LEN 32
 
+enum SENIVERSE_WEATHER_DATA_TYPE {
+    SENIVERSE_WEATHER_NOW,
+    SENIVERSE_WEATHER_DAILY,
+    SENIVERSE_WEATHER_HOURLY,
+};
+
+enum SENIVERSE_LANGUAGE_TYPE {
+    SENIVERSE_LANGUAGE_CHINESE_SIMP, // zh-Hans  简体中文
+    SENIVERSE_LANGUAGE_CHINESE_TRAD, // zh-Hant  繁体中文
+    SENIVERSE_LANGUAGE_ENGLISH,      // en       英文
+    SENIVERSE_LANGUAGE_JAPANESE,     // ja       日语
+    SENIVERSE_LANGUAGE_GERMAN,       // de       德语
+    SENIVERSE_LANGUAGE_FRENCH,       // fr       法语
+    SENIVERSE_LANGUAGE_SPAISH,       // es       西班牙语
+};
+
+enum SENIVERSE_UNIT_TYPE {
+    SENIVERSE_UNIT_METRIC,    // c	当参数为 c 时，温度 c、风速 km/h、能见度 km、气压 mb
+    SENIVERSE_UNIT_BRITISH,   // f	当参数为 f 时，温度 f、风速 mph、能见度 mile、气压 inch
+};
+
 struct seniverse_weather_common {
     struct weather_location location;
     uint8_t last_update[WEATHER_UPDATE_TIME_MAX_LEN];

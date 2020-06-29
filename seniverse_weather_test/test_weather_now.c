@@ -103,13 +103,22 @@ static int dump_weather_now(const struct weather_now *now)
     printf("\t humidity: %f\n", now->items->humidity);
 }
 
+#define KEY "S-nc7Ea36Sthm8mGn"
+#define LOCATION "beijing"
+
 int test_weather_now()
 {
     struct seniverse_weather_obj *now = creat_weather_data(SENIVERSE_WEATHER_NOW, 1);
     int count = 0;
+    uint8_t url[1024];
+
+    count = seniverse_get_url_api(SENIVERSE_WEATHER_NOW, url, 1024, KEY, LOCATION, SENIVERSE_LANGUAGE_CHINESE_SIMP, SENIVERSE_UNIT_METRIC, 0, 0);
+
+
     /* print the version */
     printf("Version: %s\n", cJSON_Version());
     printf("\n\n\n>>>>>>>weather now test.>>>>>>>>>>\n");
+    printf("get url %s,  %d\n", url, count);
 
     seniverse_parse_resp(SENIVERSE_WEATHER_NOW, weather_now_example, now, &count);
     printf("weather now data has %d items.\n", count);

@@ -6,6 +6,7 @@
 #include "cJSON.h"
 #include "seniverse_weather_hourly.h"
 #include "seniverse_cJson_utils.h"
+#include "seniverse_weather.h"
 
 #define LOG_TAG "seniverse_hourly"
 
@@ -82,4 +83,9 @@ int parse_weather_hourly(const char *buf, struct weather_hourly *hourly, int *co
     if (json)
         cJSON_Delete(json);
     return 0;
+}
+
+int weather_hourly_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit, int start, int count)
+{
+    return snprintf(url, url_max_len, "weather/hourly.json?key=%s&location=%s&language=%s&unit=%s&start=%d&hours=%d", key, location, seniverse_languages[language], seniverse_units[unit], start, count);
 }

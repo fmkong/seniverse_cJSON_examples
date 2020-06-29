@@ -148,12 +148,21 @@ static int dump_weather_daily(const struct weather_daily *daily)
     return 0;
 }
 
+#define KEY "S-nc7Ea36Sthm8mGn"
+#define LOCATION "beijing"
+
 int test_weather_daily()
 {
     struct seniverse_weather_obj *daily = creat_weather_data(SENIVERSE_WEATHER_DAILY, 3);
     int count = 0;
+    uint8_t url[1024];
+
+    count = seniverse_get_url_api(SENIVERSE_WEATHER_DAILY, url, 1024, KEY, LOCATION, SENIVERSE_LANGUAGE_CHINESE_SIMP, SENIVERSE_UNIT_METRIC, 0, 5);
+
     /* print the version */
     printf("\n\n\n>>>>>>>weather daily test.>>>>>>>>>>\n");
+    printf("get url %s,  %d\n", url, count);
+
     seniverse_parse_resp(SENIVERSE_WEATHER_DAILY, weather_daily_example, daily, &count);
     printf("weather daily data has %d items.\n", count);
     dump_weather_location(&daily->common.location);

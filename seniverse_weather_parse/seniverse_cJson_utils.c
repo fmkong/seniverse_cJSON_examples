@@ -7,6 +7,21 @@
 
 #define LOG_TAG "seniverse_utils"
 
+const char *seniverse_languages[] = {
+    "zh-Hans",  // 简体中文
+    "zh-Hant",  // 繁体中文
+    "en",       // 英文
+    "ja",       // 日语
+    "de",       // 德语
+    "fr",       // 法语
+    "es",       // 西班牙语
+};
+
+const char *seniverse_units[] = {
+    "c",  // c	当参数为 c 时，温度 c、风速 km/h、能见度 km、气压 mb
+    "f",  // f	当参数为 f 时，温度 f、风速 mph、能见度 mile、气压 inch
+};
+
 int parse_object_string_value(cJSON *obj, char *key, char *value, int len)
 {
     cJSON *obj_item = cJSON_GetObjectItemCaseSensitive(obj, key);

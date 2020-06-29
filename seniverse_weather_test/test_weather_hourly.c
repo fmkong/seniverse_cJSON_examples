@@ -109,12 +109,20 @@ static int dump_weather_hourly(const struct weather_hourly *hourly)
     return 0;
 }
 
+#define KEY "S-nc7Ea36Sthm8mGn"
+#define LOCATION "beijing"
+
 int test_weather_hourly()
 {
     struct seniverse_weather_obj *hourly = creat_weather_data(SENIVERSE_WEATHER_HOURLY, 3);
     int count = 0;
+    uint8_t url[1024];
+
+    count = seniverse_get_url_api(SENIVERSE_WEATHER_HOURLY, url, 1024, KEY, LOCATION, SENIVERSE_LANGUAGE_CHINESE_SIMP, SENIVERSE_UNIT_METRIC, 0, 24);
+
     /* print the version */
     printf("\n\n\n>>>>>>>weather hourly test.>>>>>>>>>>\n");
+    printf("get url %s,  %d\n", url, count);
     seniverse_parse_resp(SENIVERSE_WEATHER_HOURLY, weather_hourly_example, hourly, &count);
     printf("weather hourly data has %d items.\n", count);
     dump_weather_location(&hourly->common.location);

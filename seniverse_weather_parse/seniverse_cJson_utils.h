@@ -34,6 +34,9 @@ extern "C"
 
 #define MAX_STRING_OBJ_BUFFER_LEN 32
 
+extern const char *seniverse_languages[];
+extern const char *seniverse_units[];
+
 int parse_object_string_value(cJSON *obj, char *key, char *value, int len);
 int parse_object_string_to_int(cJSON *obj, char *key);
 float parse_object_string_to_float(cJSON *obj, char *key);

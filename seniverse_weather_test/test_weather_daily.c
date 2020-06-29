@@ -157,7 +157,7 @@ int test_weather_daily()
     seniverse_parse_resp(SENIVERSE_WEATHER_DAILY, weather_daily_example, daily, &count);
     printf("weather daily data has %d items.\n", count);
     dump_weather_location(&daily->common.location);
-    dump_weather_daily((struct weather_daily *)daily);
+    dump_weather_daily(&daily->daily);
     destroy_weather_data(daily);
     daily = NULL;
     return 0;

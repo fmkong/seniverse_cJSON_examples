@@ -113,7 +113,7 @@ int test_weather_now()
 
     seniverse_parse_resp(SENIVERSE_WEATHER_NOW, weather_now_example, now, &count);
     printf("weather now data has %d items.\n", count);
-    dump_weather_now((struct weather_now *)now);
+    dump_weather_now(&now->now);
     destroy_weather_data(now);
     now = NULL;
 }

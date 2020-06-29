@@ -118,7 +118,7 @@ int test_weather_hourly()
     seniverse_parse_resp(SENIVERSE_WEATHER_HOURLY, weather_hourly_example, hourly, &count);
     printf("weather hourly data has %d items.\n", count);
     dump_weather_location(&hourly->common.location);
-    dump_weather_hourly((struct weather_hourly *)hourly);
+    dump_weather_hourly(&hourly->hourly);
     destroy_weather_data(hourly);
     hourly = NULL;
     return 0;

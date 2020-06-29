@@ -19,11 +19,13 @@ enum SENIVERSE_WEATHER_DATA_TYPE{
 };
 
 struct seniverse_weather_obj {
-    struct seniverse_weather_common common;
+    union {
+        struct seniverse_weather_common common;
+        struct weather_now now;
+        struct weather_daily daily;
+        struct weather_hourly hourly;
+    };
     uint8_t items[];
-        // struct weather_now_item items_now[];
-        // struct weather_daily_item items_daily[];
-        // struct weather_hourly_item items_hourly[];
 };
 
 struct seniverse_weather_obj *creat_weather_data(enum SENIVERSE_WEATHER_DATA_TYPE type, int count);

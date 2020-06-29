@@ -14,8 +14,13 @@ ADD_EXECUTABLE(
         cJSON/cJSON.c
         cJSON/cJSON_Utils.c
         seniverse_weather_parse/seniverse_cJson_utils.c
+        seniverse_weather_parse/seniverse_weather_location.c
         seniverse_weather_parse/seniverse_weather_now.c
         seniverse_weather_parse/seniverse_weather_daily.c
+        seniverse_weather_parse/seniverse_weather_hourly.c
+        seniverse_weather_parse/seniverse_weather.c
+        seniverse_weather_test/test_weather_location.c
         seniverse_weather_test/test_weather_now.c
         seniverse_weather_test/test_weather_daily.c
+        seniverse_weather_test/test_weather_hourly.c
         test.c)

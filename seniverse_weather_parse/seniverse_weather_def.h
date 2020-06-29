@@ -7,6 +7,9 @@ extern "C"
 {
 #endif
 
+#include <stdint.h>
+#include "seniverse_weather_location.h"
+
 enum seniverse_weather_code {
     Sunny                      = 0, //晴（国内城市白天晴）
     Clear                      = 1, //晴（国内城市夜晚晴）
@@ -48,6 +51,15 @@ enum seniverse_weather_code {
     Cold                       = 37, //冷
     Hot                        = 38, //热
     Unknown                    = 99, //未知
+};
+
+#define WEATHER_UPDATE_TIME_MAX_LEN 32
+
+struct seniverse_weather_common {
+    struct weather_location location;
+    uint8_t last_update[WEATHER_UPDATE_TIME_MAX_LEN];
+    uint32_t count;
+    uint32_t index;
 };
 
 #ifdef __cplusplus

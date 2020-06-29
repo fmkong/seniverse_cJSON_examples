@@ -7,8 +7,10 @@ extern "C"
 #endif
 
 #include <stdint.h>
+#include "seniverse_weather_def.h"
+
 #define WEATHER_DAILY_SUMMARY_MAX_LEN      16
-#define WEATHER_DAILY_UPDATE_TIME_MAX_LEN  32
+#define WEATHER_DAILY_UPDATE_TIME_MAX_LEN  WEATHER_UPDATE_TIME_MAX_LEN
 
 struct weather_daily_item {
     uint8_t date[WEATHER_DAILY_SUMMARY_MAX_LEN];
@@ -28,13 +30,9 @@ struct weather_daily_item {
 };
 
 struct weather_daily {
-    uint8_t last_update[WEATHER_DAILY_UPDATE_TIME_MAX_LEN];
-    int count;
+    struct seniverse_weather_common common;
     struct weather_daily_item items[];
 };
-
-struct weather_daily *creat_weather_daily(int count);
-void destroy_weather_daily(struct weather_daily *daily);
 
 int parse_weather_daily(const char *buf, struct weather_daily *daily, int *count);
 

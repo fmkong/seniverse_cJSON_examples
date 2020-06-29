@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 #include "cJSON.h"
-#include "seniverse_weather_now.h"
+#include "seniverse_weather.h"
 #include "seniverse_cJson_utils.h"
+#include "test_weather_location.h"
 
 /*
 API: https://api.seniverse.com/v3/weather/now.json?key=your_api_key&location=beijing&language=zh-Hans&unit=c
@@ -85,31 +86,34 @@ static const char *example_real = "\n\n{\"results\":[{\"location\":{\"id\":\"WX4
 
 static int dump_weather_now(const struct weather_now *now)
 {
-    printf("Weather Now: %s\n", now->last_update);
-    printf("\tsummary: %s\n", now->summary);
-    printf("\twind_direction: %s\n", now->wind_direction);
-    printf("\ttemperature: %f\n", now->temperature);
-    printf("\tfeels_like: %f\n", now->feels_like);
-    printf("\tpressure: %f\n", now->pressure);
-    printf("\tvisibility: %f\n", now->visibility);
-    printf("\twind_speed: %f\n", now->wind_speed);
-    printf("\twind_scale: %f\n", now->wind_scale);
-    printf("\tdew_point: %f\n", now->dew_point);
-    printf("\tcode: %d\n", now->code);
-    printf("\twind_direction_degree: %f\n", now->wind_direction_degree);
-    printf("\tclouds: %f\n", now->clouds);
-    printf("\thumidity: %f\n", now->humidity);
+    dump_weather_location(&(now->common.location));
+    printf("weather now: %s\n", now->common.last_update);
+    printf("\t summary: %s\n", now->items->summary);
+    printf("\t wind_direction: %s\n", now->items->wind_direction);
+    printf("\t temperature: %f\n", now->items->temperature);
+    printf("\t feels_like: %f\n", now->items->feels_like);
+    printf("\t pressure: %f\n", now->items->pressure);
+    printf("\t visibility: %f\n", now->items->visibility);
+    printf("\t wind_speed: %f\n", now->items->wind_speed);
+    printf("\t wind_scale: %f\n", now->items->wind_scale);
+    printf("\t dew_point: %f\n", now->items->dew_point);
+    printf("\t code: %d\n", now->items->code);
+    printf("\t wind_direction_degree: %f\n", now->items->wind_direction_degree);
+    printf("\t clouds: %f\n", now->items->clouds);
+    printf("\t humidity: %f\n", now->items->humidity);
 }
 
 int test_weather_now()
 {
-    struct weather_now now;
+    struct seniverse_weather_obj *now = creat_weather_data(SENIVERSE_WEATHER_NOW, 1);
+    int count = 0;
     /* print the version */
     printf("Version: %s\n", cJSON_Version());
     printf("\n\n\n>>>>>>>weather now test.>>>>>>>>>>\n");
-    parse_weather_now(weather_now_example, &now);
-    dump_weather_now(&now);
-    memset(&now, 0, sizeof(now));
-    parse_weather_now(example_real, &now);
-    dump_weather_now(&now);
+
+    seniverse_parse_resp(SENIVERSE_WEATHER_NOW, weather_now_example, now, &count);
+    printf("weather now data has %d items.\n", count);
+    dump_weather_now((struct weather_now *)now);
+    destroy_weather_data(now);
+    now = NULL;
 }

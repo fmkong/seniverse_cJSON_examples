@@ -3,8 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 #include "cJSON.h"
-#include "seniverse_weather_daily.h"
+#include "seniverse_weather.h"
 #include "seniverse_cJson_utils.h"
+#include "test_weather_location.h"
 
 /*
 #API:
@@ -139,8 +140,8 @@ static int dump_weather_daily_item(const struct weather_daily_item *daily_item)
 
 static int dump_weather_daily(const struct weather_daily *daily)
 {
-    printf("Weather daily: %s\n", daily->last_update);
-    for (int index = 0; index < daily->count; index++) {
+    printf("Weather daily: %s\n", daily->common.last_update);
+    for (int index = 0; index < daily->common.count; index++) {
         printf("index %d ===========================\n", index);
         dump_weather_daily_item(&daily->items[index]);
     }
@@ -149,14 +150,15 @@ static int dump_weather_daily(const struct weather_daily *daily)
 
 int test_weather_daily()
 {
-    struct weather_daily *daily = creat_weather_daily(3);
+    struct seniverse_weather_obj *daily = creat_weather_data(SENIVERSE_WEATHER_DAILY, 3);
     int count = 0;
     /* print the version */
     printf("\n\n\n>>>>>>>weather daily test.>>>>>>>>>>\n");
-    parse_weather_daily(weather_daily_example, daily, &count);
+    seniverse_parse_resp(SENIVERSE_WEATHER_DAILY, weather_daily_example, daily, &count);
     printf("weather daily data has %d items.\n", count);
-    dump_weather_daily(daily);
-    destroy_weather_daily(daily);
+    dump_weather_location(&daily->common.location);
+    dump_weather_daily((struct weather_daily *)daily);
+    destroy_weather_data(daily);
     daily = NULL;
     return 0;
 }

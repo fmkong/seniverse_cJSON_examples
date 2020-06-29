@@ -8,7 +8,7 @@
 
 #define LOG_TAG "seniverse_now"
 
-static int parse_weather_now_object(cJSON *json_now, struct weather_now *now)
+static int parse_weather_now_object(cJSON *json_now, struct weather_now_item *now)
 {
     // Get the current weather data from the now object
     if (json_now == NULL) {
@@ -50,13 +50,19 @@ int parse_weather_now(const char *buf, struct weather_now *now)
         SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]\n", cJSON_GetErrorPtr());
     }
 
+    cJSON *json_location = get_object_with_key_in_array(json_results, "location");
+    if (json_location == NULL) {
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]\n", cJSON_GetErrorPtr());
+    }
+    parse_weather_location(json_location, &now->common.location);
+
     cJSON *json_now = get_object_with_key_in_array(json_results, "now");
     if (json_now)
-        parse_weather_now_object(json_now, now);
+        parse_weather_now_object(json_now, now->items);
 
     cJSON *json_last_update = get_object_with_key_in_array(json_results, "last_update");
     if (json_last_update && cJSON_IsString(json_last_update) && (json_last_update->valuestring != NULL))
-            snprintf(now->last_update, WEATHER_NOW_UPDATE_TIME_MAX_LEN, "%s", json_last_update->valuestring);
+            snprintf(now->common.last_update, WEATHER_NOW_UPDATE_TIME_MAX_LEN, "%s", json_last_update->valuestring);
 
     if (json)
         cJSON_Delete(json);

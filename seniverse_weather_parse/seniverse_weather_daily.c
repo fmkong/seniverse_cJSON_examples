@@ -46,13 +46,13 @@ static int parse_weather_daily_array(cJSON *json_daily_array, struct weather_dai
     }
     int array_size = get_object_array_size(json_daily_array);
     SENIVERSE_LOGD(LOG_TAG, "json_daily_array size is %d\n", array_size);
-    if (daily->count < array_size) {
-        SENIVERSE_LOGE(LOG_TAG, "daily items buffer is not enough: count %d, array size %d\n", daily->count, array_size);
+    if (daily->common.count < array_size) {
+        SENIVERSE_LOGE(LOG_TAG, "daily items buffer is not enough: count %d, array size %d\n", daily->common.count, array_size);
     }
-    for (int index = 0; index < (daily->count < array_size ? daily->count : array_size); index++) {
+    for (int index = 0; index < (daily->common.count < array_size ? daily->common.count : array_size); index++) {
         parse_weather_daily_item_object(get_object_with_index_in_array(json_daily_array, index), &daily->items[index]);
     }
-    *count = daily->count < array_size ? daily->count : array_size;
+    *count = daily->common.count < array_size ? daily->common.count : array_size;
     return 0;
 }
 
@@ -74,34 +74,21 @@ int parse_weather_daily(const char *buf, struct weather_daily *daily, int *count
         SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]\n", cJSON_GetErrorPtr());
     }
 
+    cJSON *json_location = get_object_with_key_in_array(json_results, "location");
+    if (json_location == NULL) {
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]\n", cJSON_GetErrorPtr());
+    }
+    parse_weather_location(json_location, &daily->common.location);
+
     cJSON *json_daily = get_object_with_key_in_array(json_results, "daily");
     if (json_daily)
         parse_weather_daily_array(json_daily, daily, count);
 
     cJSON *json_last_update = get_object_with_key_in_array(json_results, "last_update");
     if (json_last_update && cJSON_IsString(json_last_update) && (json_last_update->valuestring != NULL))
-            snprintf(daily->last_update, WEATHER_DAILY_UPDATE_TIME_MAX_LEN, "%s", json_last_update->valuestring);
+            snprintf(daily->common.last_update, WEATHER_DAILY_UPDATE_TIME_MAX_LEN, "%s", json_last_update->valuestring);
 
     if (json)
         cJSON_Delete(json);
     return 0;
-}
-
-struct weather_daily *creat_weather_daily(int count)
-{
-    struct weather_daily *daily = SENIVERSE_MALLOC(sizeof(struct weather_daily) + sizeof(struct weather_daily_item) * count);
-    if (!daily) {
-        SENIVERSE_LOGE(LOG_TAG, "Failed to alloc mem for daily data.");
-        return daily;
-    }
-    daily->count = count;
-    memset(daily->last_update, 0, WEATHER_DAILY_UPDATE_TIME_MAX_LEN);
-    memset(daily->items, 0, sizeof(struct weather_daily_item) * count);
-    return daily;
-}
-
-void destroy_weather_daily(struct weather_daily *daily)
-{
-    if (daily)
-        SENIVERSE_FREE(daily);
 }

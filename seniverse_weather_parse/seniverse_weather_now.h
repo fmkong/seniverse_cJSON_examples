@@ -7,11 +7,12 @@ extern "C"
 #endif
 
 #include <stdint.h>
-#define WEATHER_NOW_SUMMARY_MAX_LEN      16
-#define WEATHER_NOW_UPDATE_TIME_MAX_LEN  32
+#include "seniverse_weather_def.h"
 
-struct weather_now {
-    uint8_t last_update[WEATHER_NOW_UPDATE_TIME_MAX_LEN];
+#define WEATHER_NOW_SUMMARY_MAX_LEN      16
+#define WEATHER_NOW_UPDATE_TIME_MAX_LEN  WEATHER_UPDATE_TIME_MAX_LEN
+
+struct weather_now_item {
     uint8_t summary[WEATHER_NOW_SUMMARY_MAX_LEN];
     uint8_t wind_direction[WEATHER_NOW_SUMMARY_MAX_LEN];
     float temperature;
@@ -25,6 +26,11 @@ struct weather_now {
     float clouds;
     float humidity;
     int8_t code;
+};
+
+struct weather_now {
+    struct seniverse_weather_common common;
+    struct weather_now_item items[];
 };
 
 int parse_weather_now(const char *buf, struct weather_now *now);

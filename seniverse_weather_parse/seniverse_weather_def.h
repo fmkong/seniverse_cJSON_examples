@@ -2,6 +2,11 @@
 #ifndef __SENIVERSE_WEATHER_DEF__
 #define __SENIVERSE_WEATHER_DEF__
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 enum seniverse_weather_code {
     Sunny                      = 0, //晴（国内城市白天晴）
     Clear                      = 1, //晴（国内城市夜晚晴）
@@ -44,5 +49,9 @@ enum seniverse_weather_code {
     Hot                        = 38, //热
     Unknown                    = 99, //未知
 };
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -78,7 +78,7 @@ enum SENIVERSE_UNIT_TYPE {
 
 struct seniverse_weather_common {
     struct weather_location location;
-    uint8_t last_update[WEATHER_UPDATE_TIME_MAX_LEN];
+    char last_update[WEATHER_UPDATE_TIME_MAX_LEN];
     uint32_t count;
     uint32_t index;
 };

@@ -12,15 +12,16 @@ extern "C"
 #define WEATHER_LOCATION_MAX_LEN      32
 
 struct weather_location {
-    uint8_t id[WEATHER_LOCATION_MAX_LEN];
-    uint8_t name[WEATHER_LOCATION_MAX_LEN];
-    uint8_t country[WEATHER_LOCATION_MAX_LEN];
-    uint8_t path[WEATHER_LOCATION_MAX_LEN];
-    uint8_t timezone[WEATHER_LOCATION_MAX_LEN];
-    uint8_t timezone_offset[WEATHER_LOCATION_MAX_LEN];
+    char id[WEATHER_LOCATION_MAX_LEN];
+    char name[WEATHER_LOCATION_MAX_LEN];
+    char country[WEATHER_LOCATION_MAX_LEN];
+    char path[WEATHER_LOCATION_MAX_LEN];
+    char timezone[WEATHER_LOCATION_MAX_LEN];
+    char timezone_offset[WEATHER_LOCATION_MAX_LEN];
 };
 
 int parse_weather_location(cJSON *location_obj, struct weather_location *location);
+int dump_weather_location(const struct weather_location *location);
 
 #ifdef __cplusplus
 }

@@ -13,9 +13,9 @@ extern "C"
 #define WEATHER_HOURLY_UPDATE_TIME_MAX_LEN  WEATHER_UPDATE_TIME_MAX_LEN
 
 struct weather_hourly_item {
-    uint8_t time[WEATHER_HOURLY_UPDATE_TIME_MAX_LEN];
-    uint8_t text[WEATHER_HOURLY_SUMMARY_MAX_LEN];
-    uint8_t wind_direction[WEATHER_HOURLY_SUMMARY_MAX_LEN];
+    char time[WEATHER_HOURLY_UPDATE_TIME_MAX_LEN];
+    char text[WEATHER_HOURLY_SUMMARY_MAX_LEN];
+    char wind_direction[WEATHER_HOURLY_SUMMARY_MAX_LEN];
     float temperature;
     float wind_speed;
     float humidity;
@@ -29,6 +29,7 @@ struct weather_hourly {
 
 int parse_weather_hourly(const char *buf, struct weather_hourly *hourly, int *count);
 int weather_hourly_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit, int start, int count);
+int dump_weather_hourly(const struct weather_hourly *hourly);
 
 #ifdef __cplusplus
 }

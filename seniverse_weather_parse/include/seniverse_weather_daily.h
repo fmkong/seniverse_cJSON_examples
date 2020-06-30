@@ -13,10 +13,10 @@ extern "C"
 #define WEATHER_DAILY_UPDATE_TIME_MAX_LEN  WEATHER_UPDATE_TIME_MAX_LEN
 
 struct weather_daily_item {
-    uint8_t date[WEATHER_DAILY_SUMMARY_MAX_LEN];
-    uint8_t text_day[WEATHER_DAILY_SUMMARY_MAX_LEN];
-    uint8_t text_night[WEATHER_DAILY_SUMMARY_MAX_LEN];
-    uint8_t wind_direction[WEATHER_DAILY_SUMMARY_MAX_LEN];
+    char date[WEATHER_DAILY_SUMMARY_MAX_LEN];
+    char text_day[WEATHER_DAILY_SUMMARY_MAX_LEN];
+    char text_night[WEATHER_DAILY_SUMMARY_MAX_LEN];
+    char wind_direction[WEATHER_DAILY_SUMMARY_MAX_LEN];
     float high_temp;
     float low_temp;
     float precip;
@@ -36,6 +36,7 @@ struct weather_daily {
 
 int parse_weather_daily(const char *buf, struct weather_daily *daily, int *count);
 int weather_daily_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit, int start, int count);
+int dump_weather_daily(const struct weather_daily *daily);
 
 #ifdef __cplusplus
 }

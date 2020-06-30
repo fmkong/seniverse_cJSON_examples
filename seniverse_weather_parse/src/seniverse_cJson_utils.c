@@ -29,7 +29,7 @@ int parse_object_string_value(cJSON *obj, char *key, char *value, int len)
         if (value)
             snprintf(value, len, "%s", obj_item->valuestring);
     } else {
-        SENIVERSE_LOGE(LOG_TAG, "Error in get item %s: [%s]\n", key, cJSON_GetErrorPtr());
+        SENIVERSE_LOGD(LOG_TAG, "Error in get item %s: [%s]", key, IS_NULL(cJSON_GetErrorPtr()));
         return -1;
     }
     return 0;
@@ -58,7 +58,7 @@ cJSON *get_object_with_key_in_array(cJSON *array, char *key)
 {
     cJSON *result = NULL;
     int array_size = cJSON_GetArraySize(array);
-    SENIVERSE_LOGD(LOG_TAG, "array item nums: %d\n", array_size);
+    SENIVERSE_LOGD(LOG_TAG, "array item nums: %d", array_size);
 
     for(int cnt = 0; cnt < array_size; cnt++) {
         cJSON *array_sub = cJSON_GetArrayItem(array, cnt);

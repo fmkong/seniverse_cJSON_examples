@@ -118,36 +118,6 @@ const char *weather_daily_example = "\
 }\
 ";
 
-static int dump_weather_daily_item(const struct weather_daily_item *daily_item)
-{
-    printf("\t date: %s\n", daily_item->date);
-    printf("\t text_day: %s\n", daily_item->text_day);
-    printf("\t code_day: %d\n", daily_item->code_day);
-    printf("\t text_night: %s\n", daily_item->text_night);
-    printf("\t code_night: %d\n", daily_item->code_night);
-
-    printf("\t wind_direction: %s\n", daily_item->wind_direction);
-    printf("\t wind_direction_degree: %f\n", daily_item->wind_direction_degree);
-    printf("\t wind_speed: %f\n", daily_item->wind_speed);
-    printf("\t wind_scale: %f\n", daily_item->wind_scale);
-    printf("\t high_temp: %f\n", daily_item->high_temp);
-    printf("\t low_temp: %f\n", daily_item->low_temp);
-    printf("\t precip: %f\n", daily_item->precip);
-    printf("\t rainfall: %f\n", daily_item->rainfall);
-    printf("\t humidity: %f\n", daily_item->humidity);
-    return 0;
-}
-
-static int dump_weather_daily(const struct weather_daily *daily)
-{
-    printf("Weather daily: %s\n", daily->common.last_update);
-    for (int index = 0; index < daily->common.count; index++) {
-        printf("index %d ===========================\n", index);
-        dump_weather_daily_item(&daily->items[index]);
-    }
-    return 0;
-}
-
 #define KEY "S-nc7Ea36Sthm8mGn"
 #define LOCATION "beijing"
 
@@ -155,7 +125,7 @@ int test_weather_daily()
 {
     struct seniverse_weather_obj *daily = creat_weather_data(SENIVERSE_WEATHER_DAILY, 3);
     int count = 0;
-    uint8_t url[1024];
+    char url[1024];
 
     count = seniverse_get_url_api(SENIVERSE_WEATHER_DAILY, url, 1024, KEY, LOCATION, SENIVERSE_LANGUAGE_CHINESE_SIMP, SENIVERSE_UNIT_METRIC, 0, 5);
 

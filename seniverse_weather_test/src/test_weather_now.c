@@ -84,25 +84,6 @@ static const char *weather_now_example = "\
 
 static const char *example_real = "\n\n{\"results\":[{\"location\":{\"id\":\"WX4FBXXFKE4F\",\"name\":\"北京\",\"country\":\"CN\",\"path\":\"北京,北京,中国\",\"timezone\":\"Asia/Shanghai\",\"timezone_offset\":\"+08:00\"},\"now\":{\"text\":\"多云\",\"code\":\"4\",\"temperature\":\"27\"},\"last_update\":\"2020-06-28T21:00:00+08:00\"}]}";
 
-static int dump_weather_now(const struct weather_now *now)
-{
-    dump_weather_location(&(now->common.location));
-    printf("weather now: %s\n", now->common.last_update);
-    printf("\t summary: %s\n", now->items->summary);
-    printf("\t wind_direction: %s\n", now->items->wind_direction);
-    printf("\t temperature: %f\n", now->items->temperature);
-    printf("\t feels_like: %f\n", now->items->feels_like);
-    printf("\t pressure: %f\n", now->items->pressure);
-    printf("\t visibility: %f\n", now->items->visibility);
-    printf("\t wind_speed: %f\n", now->items->wind_speed);
-    printf("\t wind_scale: %f\n", now->items->wind_scale);
-    printf("\t dew_point: %f\n", now->items->dew_point);
-    printf("\t code: %d\n", now->items->code);
-    printf("\t wind_direction_degree: %f\n", now->items->wind_direction_degree);
-    printf("\t clouds: %f\n", now->items->clouds);
-    printf("\t humidity: %f\n", now->items->humidity);
-}
-
 #define KEY "S-nc7Ea36Sthm8mGn"
 #define LOCATION "beijing"
 
@@ -110,7 +91,7 @@ int test_weather_now()
 {
     struct seniverse_weather_obj *now = creat_weather_data(SENIVERSE_WEATHER_NOW, 1);
     int count = 0;
-    uint8_t url[1024];
+    char url[1024];
 
     count = seniverse_get_url_api(SENIVERSE_WEATHER_NOW, url, 1024, KEY, LOCATION, SENIVERSE_LANGUAGE_CHINESE_SIMP, SENIVERSE_UNIT_METRIC, 0, 0);
 
@@ -125,4 +106,5 @@ int test_weather_now()
     dump_weather_now(&now->now);
     destroy_weather_data(now);
     now = NULL;
+    return 0;
 }

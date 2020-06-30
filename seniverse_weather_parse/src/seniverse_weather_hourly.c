@@ -14,7 +14,7 @@ static int parse_weather_hourly_item_object(cJSON *json_hourly_item, struct weat
 {
     // Get the hourly weather data from the hourly item object
     if (json_hourly_item == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "json_hourly_item is null\n");
+        SENIVERSE_LOGE(LOG_TAG, "json_hourly_item is null");
         return -1;
     }
 
@@ -33,13 +33,13 @@ static int parse_weather_hourly_array(cJSON *json_hourly_array, struct weather_h
 {
     // Get the current weather data from the hourly array object
     if (json_hourly_array == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "json_hourly_array is null\n");
+        SENIVERSE_LOGE(LOG_TAG, "json_hourly_array is null");
         return -1;
     }
     int array_size = get_object_array_size(json_hourly_array);
-    SENIVERSE_LOGD(LOG_TAG, "json_hourly_array size is %d\n", array_size);
+    SENIVERSE_LOGD(LOG_TAG, "json_hourly_array size is %d", array_size);
     if (hourly->common.count < array_size) {
-        SENIVERSE_LOGE(LOG_TAG, "hourly items buffer is not enough: count %d, array size %d\n", hourly->common.count, array_size);
+        SENIVERSE_LOGE(LOG_TAG, "hourly items buffer is not enough: count %d, array size %d", hourly->common.count, array_size);
     }
     for (int index = 0; index < (hourly->common.count < array_size ? hourly->common.count : array_size); index++) {
         parse_weather_hourly_item_object(get_object_with_index_in_array(json_hourly_array, index), &hourly->items[index]);
@@ -51,24 +51,24 @@ static int parse_weather_hourly_array(cJSON *json_hourly_array, struct weather_h
 int parse_weather_hourly(const char *buf, struct weather_hourly *hourly, int *count)
 {
     // Data can be found after the HTTP header, get te offset to get the data
-    char* data_offset = strstr(buf, "\n");
+    char *data_offset = strstr(buf, "\r\n\r\n");
 
-    SENIVERSE_LOGD(LOG_TAG, "get resp: %s\n", data_offset);
+    SENIVERSE_LOGD(LOG_TAG, "get resp: %s", data_offset);
 
     cJSON *json = cJSON_Parse(data_offset);
     if (json == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in cJSON_Parse: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in cJSON_Parse: [%s]", IS_NULL(cJSON_GetErrorPtr()));
         return -1;
     }
 
     cJSON *json_results = cJSON_GetObjectItemCaseSensitive(json, "results");
     if (json_results == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]", IS_NULL(cJSON_GetErrorPtr()));
     }
 
     cJSON *json_location = get_object_with_key_in_array(json_results, "location");
     if (json_location == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]", IS_NULL(cJSON_GetErrorPtr()));
     }
     parse_weather_location(json_location, &hourly->common.location);
 
@@ -88,4 +88,26 @@ int parse_weather_hourly(const char *buf, struct weather_hourly *hourly, int *co
 int weather_hourly_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit, int start, int count)
 {
     return snprintf(url, url_max_len, "weather/hourly.json?key=%s&location=%s&language=%s&unit=%s&start=%d&hours=%d", key, location, seniverse_languages[language], seniverse_units[unit], start, count);
+}
+
+static int dump_weather_hourly_item(const struct weather_hourly_item *hourly_item)
+{
+    SENIVERSE_LOGD(LOG_TAG, "\t time: %s", hourly_item->time);
+    SENIVERSE_LOGD(LOG_TAG, "\t text: %s", hourly_item->text);
+    SENIVERSE_LOGD(LOG_TAG, "\t code: %d", hourly_item->code);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_direction: %s", hourly_item->wind_direction);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_speed: %f", hourly_item->wind_speed);
+    SENIVERSE_LOGD(LOG_TAG, "\t temperature: %f", hourly_item->temperature);
+    SENIVERSE_LOGD(LOG_TAG, "\t humidity: %f", hourly_item->humidity);
+    return 0;
+}
+
+int dump_weather_hourly(const struct weather_hourly *hourly)
+{
+    SENIVERSE_LOGD(LOG_TAG, "Weather hourly: %s", hourly->common.last_update);
+    for (int index = 0; index < hourly->common.count; index++) {
+        SENIVERSE_LOGD(LOG_TAG, "index %d ===========================", index);
+        dump_weather_hourly_item(&hourly->items[index]);
+    }
+    return 0;
 }

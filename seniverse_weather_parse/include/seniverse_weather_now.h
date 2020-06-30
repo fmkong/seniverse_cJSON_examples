@@ -13,8 +13,8 @@ extern "C"
 #define WEATHER_NOW_UPDATE_TIME_MAX_LEN  WEATHER_UPDATE_TIME_MAX_LEN
 
 struct weather_now_item {
-    uint8_t summary[WEATHER_NOW_SUMMARY_MAX_LEN];
-    uint8_t wind_direction[WEATHER_NOW_SUMMARY_MAX_LEN];
+    char summary[WEATHER_NOW_SUMMARY_MAX_LEN];
+    char wind_direction[WEATHER_NOW_SUMMARY_MAX_LEN];
     float temperature;
     float feels_like;
     float pressure;
@@ -35,6 +35,7 @@ struct weather_now {
 
 int parse_weather_now(const char *buf, struct weather_now *now);
 int weather_now_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit);
+int dump_weather_now(const struct weather_now *now);
 
 #ifdef __cplusplus
 }

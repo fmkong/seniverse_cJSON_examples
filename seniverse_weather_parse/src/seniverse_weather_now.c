@@ -13,7 +13,7 @@ static int parse_weather_now_object(cJSON *json_now, struct weather_now_item *no
 {
     // Get the current weather data from the now object
     if (json_now == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "json_now is null\n");
+        SENIVERSE_LOGE(LOG_TAG, "json_now is null");
         return -1;
     }
 
@@ -36,24 +36,24 @@ static int parse_weather_now_object(cJSON *json_now, struct weather_now_item *no
 int parse_weather_now(const char *buf, struct weather_now *now)
 {
     // Data can be found after the HTTP header, get te offset to get the data
-    char* data_offset = strstr(buf, "\n");
+    char *data_offset = strstr(buf, "\r\n\r\n");
 
-    SENIVERSE_LOGD(LOG_TAG, "get resp: %s\n", data_offset);
+    SENIVERSE_LOGD(LOG_TAG, "get resp: %s", data_offset);
 
     cJSON *json = cJSON_Parse(data_offset);
     if (json == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in cJSON_Parse: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in cJSON_Parse: [%s]", IS_NULL(cJSON_GetErrorPtr()));
         return -1;
     }
 
     cJSON *json_results = cJSON_GetObjectItemCaseSensitive(json, "results");
     if (json_results == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item result: [%s]", IS_NULL(cJSON_GetErrorPtr()));
     }
 
     cJSON *json_location = get_object_with_key_in_array(json_results, "location");
     if (json_location == NULL) {
-        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]\n", cJSON_GetErrorPtr());
+        SENIVERSE_LOGE(LOG_TAG, "Error in get item location: [%s]", IS_NULL(cJSON_GetErrorPtr()));
     }
     parse_weather_location(json_location, &now->common.location);
 
@@ -73,4 +73,24 @@ int parse_weather_now(const char *buf, struct weather_now *now)
 int weather_now_get_url_api(char *url, int url_max_len, char *key, char *location, enum SENIVERSE_LANGUAGE_TYPE language, enum SENIVERSE_UNIT_TYPE unit)
 {
     return snprintf(url, url_max_len, "weather/now.json?key=%s&location=%s&language=%s&unit=%s", key, location, seniverse_languages[language], seniverse_units[unit]);
+}
+
+int dump_weather_now(const struct weather_now *now)
+{
+    dump_weather_location(&(now->common.location));
+    SENIVERSE_LOGD(LOG_TAG, "weather now: %s", now->common.last_update);
+    SENIVERSE_LOGD(LOG_TAG, "\t summary: %s", now->items->summary);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_direction: %s", now->items->wind_direction);
+    SENIVERSE_LOGD(LOG_TAG, "\t temperature: %f", now->items->temperature);
+    SENIVERSE_LOGD(LOG_TAG, "\t feels_like: %f", now->items->feels_like);
+    SENIVERSE_LOGD(LOG_TAG, "\t pressure: %f", now->items->pressure);
+    SENIVERSE_LOGD(LOG_TAG, "\t visibility: %f", now->items->visibility);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_speed: %f", now->items->wind_speed);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_scale: %f", now->items->wind_scale);
+    SENIVERSE_LOGD(LOG_TAG, "\t dew_point: %f", now->items->dew_point);
+    SENIVERSE_LOGD(LOG_TAG, "\t code: %d", now->items->code);
+    SENIVERSE_LOGD(LOG_TAG, "\t wind_direction_degree: %f", now->items->wind_direction_degree);
+    SENIVERSE_LOGD(LOG_TAG, "\t clouds: %f", now->items->clouds);
+    SENIVERSE_LOGD(LOG_TAG, "\t humidity: %f", now->items->humidity);
+    return 0;
 }
